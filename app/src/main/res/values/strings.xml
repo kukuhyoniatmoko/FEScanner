@@ -1,0 +1,96 @@
+<resources>
+    <string name="app_name">ITP Scanner</string>
+    <string name="action_logout">Logout</string>
+
+    <string name="open_drawer">Open Drawer</string>
+    <string name="close_drawer">Close Drawer</string>
+
+    <string name="username_email">Username/Email</string>
+    <string name="login">Login</string>
+    <string name="password">Password</string>
+    <string name="invalid_credential">Invalid Credential</string>
+    <string name="invalid_admin_credential">Only user with admin or scanner privilege can login</string>
+
+    <string name="invalid_event">Invalid Event</string>
+
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="cant_refresh_history">Can\'t refresh history</string>
+    <string name="invalid_user_id">Invalid User ID</string>
+    <string name="device_id_redeemed">Device ID Redeemed</string>
+
+    <string name="login_with_facebook">Login with Facebook</string>
+    <string name="login_with_twitter">Login with Twitter</string>
+    <string name="login_with_google">Login with Google</string>
+    <string name="login_with_google_failed">Login with Google Failed</string>
+    <string name="logout_confirmation_message">Are you sure to logout?</string>
+
+    <string name="tw_login_failed">Log in with Twitter failed</string>
+    <string name="tw_login_failed_app_not_installed">Twitter App is not installed on your device. Please install it and try again.</string>
+
+    <string name="install">Install</string>
+
+    <string name="max60_min5">At least 5 characters, maximum 60 characters.</string>
+
+    <string name="user_id">User ID</string>
+    <string name="device_id">Device ID</string>
+    <string name="submit">Submit</string>
+    <string name="or">Or</string>
+
+    <string name="history">History</string>
+    <string name="search_history">Search History</string>
+    <string name="clear_query">Clear Query</string>
+    <string name="result_not_found">Result not found</string>
+    <string name="scan">Scan</string>
+    <string name="edit">Edit</string>
+    <string name="lucky_dip_redeemed">Lucky dip redeemed</string>
+    <string name="voucher_redeemed">Voucher redeemed</string>
+    <string name="lucky_dip_voucher_redeemed">Lucky dip &amp; voucher redeemed</string>
+    <string name="start_scan">Start Scan</string>
+    <string name="re_scan">Re-Scan</string>
+    <string name="enable_scan">Enable Scan</string>
+    <string name="scan_result">Scan Result</string>
+    <string name="undefined">Undefined</string>
+    <string name="invalid_qr_code">Invalid QR Code</string>
+    <string name="uid_required">UID is required!</string>
+    <string name="device_id_required">Device id is required!</string>
+
+    <string name="camera_permission_denied_message">Camera permission denied, scanning can\'t be started.</string>
+    <string name="camera_permission_rationale_message">FE Scanner needs to access camera</string>
+
+    <string name="success_message">Successful!</string>
+    <string name="uid_invalid_message">UID invalid/redeemed!</string>
+    <string name="device_redeemed_message">Device redeemed!</string>
+    <string name="voucher_empty_message">Voucher empty!</string>
+
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="back">Back</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
+    <string name="select_event">Select Event</string>
+    <string name="select_event_confirmation_message">Are you sure you want to select this event?</string>
+
+    <string name="available_options">Available Options</string>
+    <string name="redeem_options">Redeem Options</string>
+    <string name="voucher">Voucher</string>
+    <string name="voucher_remaining">Voucher Remaining</string>
+    <string name="lucky_dip">Lucky Dip</string>
+    <string name="no_change_message">You\'ve made no changes, tap on back button to cancel.</string>
+    <string name="back_confirmation_message">Are you sure want to go back?</string>
+    <string name="change_will_be_discarded_message">If you go back now, your changes will be discarded</string>
+    <string name="un_select_voucher_message">Are you sure this user never received the voucher before?</string>
+
+    <string name="profile">Profile</string>
+    <string name="name">Name</string>
+    <string name="username">Username</string>
+    <string name="email">Email</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="change_password">Change Password</string>
+    <string name="current_password">Current Password</string>
+    <string name="confirm_password">Confirm New Password</string>
+    <string name="new_password">New Password</string>
+
+    <string name="required_message">This field is required</string>
+    <string name="wrong_email">Please insert a correct email address</string>
+</resources>

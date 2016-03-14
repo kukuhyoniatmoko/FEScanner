@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="background_dark">#E9EAEE</color>
+    <color name="background_normal">#F6F7F9</color>
+    <color name="background_light">#FFFFFF</color>
+
+    <color name="text_black_primary">#DE000000</color>
+    <color name="text_black_secondary">#8A000000</color>
+    <color name="text_black_disabled">#42000000</color>
+
+    <color name="text_white_primary">#FFFFFFFF</color>
+    <color name="text_white_secondary">#B2FFFFFF</color>
+    <color name="text_white_disabled">#4CFFFFFF</color>
+
+    <color name="redeem_header_background">#8A970018</color>
+
+    <color name="red_foodenak_dark">#970018</color>
+    <color name="red_foodenak">#B7132B</color>
+    <color name="red_foodenak_light">#B7435B</color>
+
+    <color name="blue_accent">#40A5F5</color>
+
+    <color name="blue_facebook_dark">#1b3978</color>
+    <color name="blue_facebook">#3b5998</color>
+
+    <color name="blue_twitter_dark">#2079dF</color>
+    <color name="blue_twitter">#4099FF</color>
+
+    <color name="blue_google_dark">#2265d4</color>
+    <color name="blue_google">#4285F4</color>
+</resources>

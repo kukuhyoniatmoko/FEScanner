@@ -1,0 +1,6 @@
+/build
+/.gradle
+/fabric.properties
+*.jar
+*.apk
+/google-services.json

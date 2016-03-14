@@ -1,0 +1,108 @@
+<resources>
+
+    <style name="BaseAppTheme" parent="Theme.AppCompat.Light.NoActionBar"/>
+
+    <style name="AppTheme" parent="BaseAppTheme">
+        <item name="android:windowBackground">@color/background_dark</item>
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/red_foodenak</item>
+        <item name="colorPrimaryDark">@color/red_foodenak_dark</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="actionModeStyle">@style/RedActionMode</item>
+        <item name="android:popupMenuStyle">@style/Widget.AppCompat.Light.PopupMenu</item>
+
+        <item name="colorAccent">@color/red_foodenak_light</item>
+
+        <item name="colorControlNormal">@color/text_black_secondary</item>
+        <item name="colorControlActivated">@color/red_foodenak_light</item>
+        <item name="colorControlHighlight">@color/red_foodenak_light</item>
+    </style>
+
+    <style name="AppTheme.BrandedLaunch">
+        <item name="android:windowBackground">@drawable/branded_launch_screen</item>
+    </style>
+
+    <style name="ScanActivityTheme" parent="AppTheme"/>
+
+    <style name="RedActionMode" parent="Widget.AppCompat.Light.ActionMode.Inverse">
+        <item name="background">@color/red_foodenak</item>
+    </style>
+
+    <style name="ToolbarStyle" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="colorPrimary">@color/red_foodenak</item>
+        <item name="colorPrimaryDark">@color/red_foodenak_dark</item>
+
+        <item name="colorAccent">@color/blue_accent</item>
+
+        <item name="colorControlNormal">@color/text_white_primary</item>
+        <item name="colorControlActivated">@color/text_white_primary</item>
+        <item name="colorControlHighlight">@color/blue_accent</item>
+        <item name="android:dropDownListViewStyle">@style/ToolbarPopUpMenuStyle</item>
+        <item name="dropDownListViewStyle">@style/ToolbarPopUpMenuStyle</item>
+    </style>
+
+    <style name="ToolbarPopUpMenuStyle" parent="@style/Widget.AppCompat.ListView.DropDown">
+        <item name="android:background">@drawable/overflow_menu_toolbar_background</item>
+    </style>
+
+    <style name="ButtonStyle">
+        <item name="android:minHeight">48dp</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/see_more_button</item>
+        <item name="android:textColor">@color/text_white_primary</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceButton</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="SocialButton" parent="ButtonStyle">
+        <item name="android:paddingLeft">13dp</item>
+        <item name="android:paddingRight">13dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="SocialButton.Facebook">
+        <item name="android:text">@string/login_with_facebook</item>
+        <item name="android:background">@drawable/facebook_button</item>
+    </style>
+
+    <style name="SocialButton.Twitter">
+        <item name="android:text">@string/login_with_twitter</item>
+        <item name="android:background">@drawable/twitter_button</item>
+    </style>
+
+    <style name="SocialButton.Google">
+        <item name="android:text">@string/login_with_google</item>
+        <item name="android:drawablePadding">4dp</item>
+        <item name="android:paddingLeft">15dp</item>
+        <item name="android:paddingRight">15dp</item>
+        <item name="android:background">@drawable/google_button</item>
+    </style>
+
+    <style name="EditText" parent="Widget.AppCompat.EditText">
+        <item name="android:background">@drawable/edit_text_all_background</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:textCursorDrawable">@drawable/edit_text_login_cursor</item>
+    </style>
+
+    <style name="EditText.Login">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:textColor">@color/text_black_primary</item>
+        <item name="android:textColorHint">@color/text_black_disabled</item>
+    </style>
+
+    <style name="AlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <!-- Used for the buttons -->
+        <item name="colorAccent">@color/red_foodenak</item>
+        <!-- Used for the title and text -->
+        <item name="android:textColorPrimary">@color/text_black_primary</item>
+        <!-- Used for the background -->
+        <item name="android:background">@color/background_light</item>
+    </style>
+
+    <style name="ListItemProgressBarStyle" parent="android:Widget.Holo.ProgressBar.Small"/>
+</resources>
