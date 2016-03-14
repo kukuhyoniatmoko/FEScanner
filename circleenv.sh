@@ -21,7 +21,7 @@
 #!/usr/bin/env bash
 
 function copyEnvVarsToGradleProperties {
-    SECRET_PROPERTIES="secret.properties"
+    SECRET_PROPERTIES="$HOME/FEScanner/secret.properties"
     export SECRET_PROPERTIES
     echo "Secret Properties should exist at $SECRET_PROPERTIES"
 
