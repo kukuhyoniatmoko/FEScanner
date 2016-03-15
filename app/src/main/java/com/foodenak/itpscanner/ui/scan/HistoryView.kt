@@ -12,10 +12,6 @@ interface HistoryView {
 
     fun showCantFetchHistoryMessage()
 
-    fun addHistory(position: Int, users: List<User>)
-
-    fun addHistory(users: List<User>)
-
     fun showProgress(visibility: Boolean)
 
     fun navigateToOptions(userId: String, deviceId: String? = null)

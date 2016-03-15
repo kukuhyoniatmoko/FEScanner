@@ -68,7 +68,7 @@ class HistoryViewModel @Inject constructor(val model: EventModel) {
         .retryWithBackOff()
         .applyScheduler()
         .subscribe({ users ->
-          view?.addHistory(0, users)
+          view?.setHistory(users)
         }, { Log.e("PoolHistory", "pooling failed", it) })
   }
 
@@ -171,7 +171,7 @@ class HistoryViewModel @Inject constructor(val model: EventModel) {
         return
       }
       query.page++
-      view?.addHistory(t)
+      view?.setHistory(t)
     }
 
     override fun onError(e: Throwable?) {

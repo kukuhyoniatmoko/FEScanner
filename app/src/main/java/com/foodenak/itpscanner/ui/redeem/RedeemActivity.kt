@@ -67,7 +67,7 @@ class RedeemActivity : AppCompatActivity(), HasComponent<Component> {
     override fun component(): Component {
         synchronized(this.javaClass) {
             if (component == null) {
-                component = dependencyHolder().getObj(this.javaClass.name) as Component
+                component = dependencyHolder().getObj(this.javaClass.name) as Component?
             }
             if (component == null) {
                 eventId = intent.getLongExtra(EVENT_ID, 0)

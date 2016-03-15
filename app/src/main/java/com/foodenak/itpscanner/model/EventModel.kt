@@ -14,6 +14,8 @@ import com.foodenak.itpscanner.services.PoolService
 import com.foodenak.itpscanner.services.exception.validateResponse
 import rx.Observable
 import rx.schedulers.Schedulers
+import java.util.ArrayList
+import java.util.Collections
 import java.util.Date
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -26,6 +28,36 @@ import javax.inject.Singleton
 class EventModel @Inject constructor(val userRepository: UserRepository,
     val voucherRepository: VoucherRepository,
     val repository: EventRepository, val service: EventService, val poolService: PoolService) {
+
+  val histories: MutableList<User> = ArrayList()
+
+  internal fun getHistories(): List<User> {
+    synchronized(this) {
+      return Collections.unmodifiableList(histories)
+    }
+  }
+
+  internal fun addHistoryStart(users: Collection<User>?) {
+    if (users == null) return
+    synchronized(this) {
+      histories.removeAll(users)
+      histories.addAll(0, users)
+    }
+  }
+
+  internal fun addHistoryEnd(users: Collection<User>?) {
+    if (users == null) return
+    synchronized(this) {
+      histories.removeAll(users)
+      histories.addAll(users)
+    }
+  }
+
+  internal fun clearHistories() {
+    synchronized(this) {
+      histories.clear()
+    }
+  }
 
   fun getEvents(): Observable<List<Event>> {
     return Observable.merge(repository.getEvents(), service.getEvents().validateResponse()
@@ -57,7 +89,9 @@ class EventModel @Inject constructor(val userRepository: UserRepository,
     return service.getHistory(id, parameter.createMap()).validateResponse().map {
       voucherRepository.setVoucherRemaining(it.voucherRemaining)
       if (parameter.isEmpty() && it.results!!.data!!.isNotEmpty()) saveLastHistory(it.results?.data)
-      it.results!!.data!!
+      if (parameter.page <= 1) clearHistories()
+      addHistoryEnd(it.results?.data)
+      getHistories()
     }
   }
 
@@ -103,13 +137,14 @@ class EventModel @Inject constructor(val userRepository: UserRepository,
           voucherRepository.setVoucherRemaining(wrapper.voucherRemaining)
           if (wrapper.results?.data == null) return@schedulePeriodically
           saveLastHistory(wrapper.results?.data)
-          it.onNext(wrapper.results!!.data!!)
+          addHistoryStart(wrapper.results?.data)
+          getHistories()
         } catch (e: Exception) {
           Log.d("PoolHistory", "pooling error ...", e)
           it.onError(e)
         }
         Log.d("PoolHistory", "pooling finish ...")
-      }, 0, 0, TimeUnit.MINUTES);
+      }, 0, 5, TimeUnit.SECONDS);
     }
   }
 }

@@ -25,97 +25,90 @@ import javax.inject.Inject
  */
 class HistoryFragment : Fragment(), HistoryView {
 
-    @Inject lateinit var viewModel: HistoryViewModel
+  @Inject lateinit var viewModel: HistoryViewModel
 
-    @Inject lateinit var imageLoader: ImageLoader
+  @Inject lateinit var imageLoader: ImageLoader
 
-    lateinit var adapter: HistoryAdapter
+  lateinit var adapter: HistoryAdapter
 
-    var eventId: Long = 0
+  var eventId: Long = 0
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-        activity.obtainActivityComponent<Component>().inject(this)
-        adapter = HistoryAdapter(imageLoader)
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setHasOptionsMenu(true)
+    activity.obtainActivityComponent<Component>().inject(this)
+    adapter = HistoryAdapter(imageLoader)
+  }
+
+  override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+      savedInstanceState: Bundle?): View? {
+    return inflater?.inflate(R.layout.fragment_history, container, false)
+  }
+
+  override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    bindView()
+  }
+
+  private fun bindView() {
+    recyclerView.layoutManager = LinearLayoutManager(context)
+    recyclerView.addItemDecoration(LinearDivider(context, R.drawable.recycler_divider_1_dp))
+    recyclerView.adapter = adapter
+    recyclerView.addOnScrollListener(viewModel.scrollListener)
+    refreshLayout.setColorSchemeResources(R.color.red_foodenak)
+    refreshLayout.setOnRefreshListener(viewModel.refreshListener)
+    adapter.clickListener = viewModel.historyItemClickListener
+    adapter.clearQueryListener = viewModel.clearQueryButtonListener
+  }
+
+  override fun onStart() {
+    super.onStart()
+    val preferences = PreferenceManager.getDefaultSharedPreferences(activity)
+    eventId = preferences.getLong(ScanActivity.EXTRA_EVENT_ID, 0)
+    if (UserSession.currentSession.isActive() && eventId != 0.toLong()) {
+      viewModel.setEventId(eventId)
+      viewModel.takeView(this)
     }
+  }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater?.inflate(R.layout.fragment_history, container, false)
-    }
+  override fun setHistory(users: List<User>) {
+    adapter.setHistory(users)
+  }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        bindView()
-    }
+  override fun showProgress(visibility: Boolean) {
+    adapter.setFooter(HistoryAdapter.FOOTER_LOADING, visibility, true)
+  }
 
-    private fun bindView() {
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.addItemDecoration(LinearDivider(context, R.drawable.recycler_divider_1_dp))
-        recyclerView.adapter = adapter
-        recyclerView.addOnScrollListener(viewModel.scrollListener)
-        refreshLayout.setColorSchemeResources(R.color.red_foodenak)
-        refreshLayout.setOnRefreshListener(viewModel.refreshListener)
-        adapter.clickListener = viewModel.historyItemClickListener
-        adapter.clearQueryListener = viewModel.clearQueryButtonListener
+  override fun showResultNotFoundMessageIfNeeded() {
+    if (adapter.isEmpty()) {
+      adapter.setFooter(HistoryAdapter.FOOTER_NOT_FOUND, true, true)
     }
+  }
 
-    override fun onStart() {
-        super.onStart()
-        val preferences = PreferenceManager.getDefaultSharedPreferences(activity)
-        eventId = preferences.getLong(ScanActivity.EXTRA_EVENT_ID, 0)
-        if (UserSession.currentSession.isActive() && eventId != 0.toLong()) {
-            viewModel.setEventId(eventId)
-            viewModel.takeView(this)
-        }
-    }
+  override fun setSearchQuery(find: String?) {
+    adapter.searchQuery = (find)
+  }
 
-    override fun setHistory(users: List<User>) {
-        adapter.setHistory(users)
-    }
+  override fun hideRefreshIndicator() {
+    refreshLayout.isRefreshing = false
+  }
 
-    override fun addHistory(position: Int, users: List<User>) {
-        adapter.addHistory(position, users)
-    }
+  override fun showCantFetchHistoryMessage() {
+    Toast.makeText(context, R.string.cant_refresh_history, Toast.LENGTH_SHORT).show()
+  }
 
-    override fun addHistory(users: List<User>) {
-        adapter.addHistory(users)
-    }
+  override fun navigateToOptions(userId: String, deviceId: String?) {
+    val intent = Intent(context, RedeemActivity::class.java)
+    val preferences = PreferenceManager.getDefaultSharedPreferences(activity)
+    eventId = preferences.getLong(ScanActivity.EXTRA_EVENT_ID, 0)
+    intent.putExtra(RedeemActivity.USER_ID, userId)
+    intent.putExtra(RedeemActivity.DEVICE_ID, deviceId)
+    intent.putExtra(RedeemActivity.EVENT_ID, eventId)
+    startActivity(intent)
+  }
 
-    override fun showProgress(visibility: Boolean) {
-        adapter.setFooter(HistoryAdapter.FOOTER_LOADING, visibility, true)
-    }
-
-    override fun showResultNotFoundMessageIfNeeded() {
-        if (adapter.isEmpty()) {
-            adapter.setFooter(HistoryAdapter.FOOTER_NOT_FOUND, true, true)
-        }
-    }
-
-    override fun setSearchQuery(find: String?) {
-        adapter.searchQuery = (find)
-    }
-
-    override fun hideRefreshIndicator() {
-        refreshLayout.isRefreshing = false
-    }
-
-    override fun showCantFetchHistoryMessage() {
-        Toast.makeText(context, R.string.cant_refresh_history, Toast.LENGTH_SHORT).show()
-    }
-
-    override fun navigateToOptions(userId: String, deviceId: String?) {
-        val intent = Intent(context, RedeemActivity::class.java)
-        val preferences = PreferenceManager.getDefaultSharedPreferences(activity)
-        eventId = preferences.getLong(ScanActivity.EXTRA_EVENT_ID, 0)
-        intent.putExtra(RedeemActivity.USER_ID, userId)
-        intent.putExtra(RedeemActivity.DEVICE_ID, deviceId)
-        intent.putExtra(RedeemActivity.EVENT_ID, eventId)
-        startActivity(intent)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        viewModel.dropView(this)
-    }
+  override fun onStop() {
+    super.onStop()
+    viewModel.dropView(this)
+  }
 }
