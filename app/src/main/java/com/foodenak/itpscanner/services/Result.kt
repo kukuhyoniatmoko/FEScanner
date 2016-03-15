@@ -5,21 +5,19 @@ package com.foodenak.itpscanner.services
  */
 class Result<T> {
 
-    var total: Int = 0
+  var total: Int = 0
 
-    var currentPage: Int = 0
+  var currentPage: Int = 0
 
-    var lastPage: Int = 0
+  var lastPage: Int = 0
 
-    var perPage: Int = 0
+  var perPage: Int = 0
 
-    var from: Int = 0
+  var from: Int = 0
 
-    var to: Int = 0
+  var to: Int = 0
 
-    var data: List<T>? = null;
+  var data: List<T>? = null;
 
-    fun isComplete(): Boolean {
-        return currentPage == lastPage
-    }
+  fun isComplete(): Boolean = currentPage == lastPage
 }

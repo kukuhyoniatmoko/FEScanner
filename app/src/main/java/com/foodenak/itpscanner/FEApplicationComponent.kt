@@ -4,6 +4,7 @@ import com.facebook.login.LoginManager
 import com.foodenak.itpscanner.model.EventModel
 import com.foodenak.itpscanner.model.UserModel
 import com.foodenak.itpscanner.persistence.DbModule
+import com.foodenak.itpscanner.persistence.dao.DaoSession
 import com.foodenak.itpscanner.services.AdapterModule
 import com.foodenak.itpscanner.services.ClientModule
 import com.foodenak.itpscanner.services.ServiceModule
@@ -22,27 +23,29 @@ import javax.inject.Singleton
  */
 @Singleton
 @Component(modules = arrayOf(FEApplicationModule::class,
-        AdapterModule::class,
-        ClientModule::class,
-        ServiceModule::class,
-        DbModule::class,
+    AdapterModule::class,
+    ClientModule::class,
+    ServiceModule::class,
+    DbModule::class,
     ImageLoaderModule::class)) interface FEApplicationComponent {
 
-    fun scanViewModel(): ScanViewModel
+  fun scanViewModel(): ScanViewModel
 
-    fun loginViewModel(): LoginViewModel
+  fun loginViewModel(): LoginViewModel
 
-    fun eventsViewModel(): EventsViewModel
+  fun eventsViewModel(): EventsViewModel
 
-    fun historyViewModel(): HistoryViewModel
+  fun historyViewModel(): HistoryViewModel
 
-    fun eventModel(): EventModel
+  fun eventModel(): EventModel
 
-    fun userModel(): UserModel
+  fun userModel(): UserModel
 
-    fun imageLoader(): ImageLoader
+  fun imageLoader(): ImageLoader
 
-    fun loginManager(): LoginManager
+  fun loginManager(): LoginManager
 
-    fun twitterAuthClient(): TwitterAuthClient
+  fun twitterAuthClient(): TwitterAuthClient
+
+  fun daoSession(): DaoSession
 }

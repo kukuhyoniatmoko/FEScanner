@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notification_provider_authorities">com.foodenak.foodenak.provider</string>
+    <string name="account_type">com.foodenak</string>
+    <string name="auth_permission">com.foodenak.foodenak.AccountAuthentication</string>
+</resources>

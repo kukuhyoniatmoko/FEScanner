@@ -16,18 +16,16 @@ import rx.Observable
  */
 interface EventService {
 
-    @GET("event")
-    fun getEvents(): Observable<ListResponseWrapper<Event>>
+  @GET("event") fun getEvents(): Observable<ListResponseWrapper<Event>>
 
-    @GET("event/{id}")
-    fun getEvent(@Path("id") id: Long): Observable<ResponseWrapper<Event>>
+  @GET("event/{id}") fun getEvent(@Path("id") id: Long): Observable<ResponseWrapper<Event>>
 
-    @GET("event/{id}/user-history")
-    fun getHistory(@Path("id") id: Long, @QueryMap query: Map<String, String>): Observable<ListRedeemWrapper<User>>
+  @GET("event/{id}/user-history") fun getHistory(@Path("id") id: Long,
+      @QueryMap query: Map<String, String>): Observable<ListRedeemWrapper<User>>
 
-    @POST("event/{id}/user-register")
-    fun register(@Path("id") id: Long, @Body parameter: RegisterForEventParameter): Observable<ResponseWrapper<User>>
+  @POST("event/{id}/user-register") fun register(@Path("id") id: Long,
+      @Body parameter: RegisterForEventParameter): Observable<ResponseWrapper<User>>
 
-    @POST("event/{id}/user-redeem")
-    fun redeem(@Path("id") id: Long, @Body parameter: RedeemParameter): Observable<RedeemWrapper<User>>
+  @POST("event/{id}/user-redeem") fun redeem(@Path("id") id: Long,
+      @Body parameter: RedeemParameter): Observable<RedeemWrapper<User>>
 }

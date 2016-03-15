@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">FoodEnak Scanner Development</string>
+    <string name="notification_provider_authorities">com.foodenak.foodenak.dev.provider</string>
+    <string name="account_type">com.foodenak.dev</string>
+    <string name="auth_permission">com.foodenak.foodenak.dev.AccountAuthentication</string>
+    <string name="save">Save</string>
+</resources>

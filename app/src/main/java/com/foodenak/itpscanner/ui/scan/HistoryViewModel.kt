@@ -4,6 +4,7 @@ import android.support.v4.view.MenuItemCompat
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.SearchView
 import android.text.TextUtils
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import com.foodenak.itpscanner.entities.HistoryParameter
@@ -15,6 +16,7 @@ import com.foodenak.itpscanner.services.exception.ResponseException
 import com.foodenak.itpscanner.services.exception.ResultNotFoundException
 import com.foodenak.itpscanner.utils.LoadMoreDeterminer
 import com.foodenak.itpscanner.utils.applyScheduler
+import com.foodenak.itpscanner.utils.retryWithBackOff
 import rx.Observable
 import rx.Observer
 import rx.Subscription
@@ -62,11 +64,12 @@ class HistoryViewModel @Inject constructor(val model: EventModel) {
   internal fun startPoolHistory() {
     poolHistorySubscription?.unsubscribe()
     poolHistorySubscription = model.poolHistory(query.eventId)
-        .retry { i, throwable -> throwable is SocketTimeoutException }
+        .retry { i, throwable -> throwable is SocketTimeoutException || throwable is ResultNotFoundException }
+        .retryWithBackOff()
         .applyScheduler()
         .subscribe({ users ->
           view?.addHistory(0, users)
-        }, {})
+        }, { Log.e("PoolHistory", "pooling failed", it) })
   }
 
   fun dropView(view: HistoryView) {
@@ -139,9 +142,7 @@ class HistoryViewModel @Inject constructor(val model: EventModel) {
     loadHistory()
   }
 
-  val scrollListener: LoadMoreDeterminer = LoadMoreDeterminer(Runnable {
-    loadHistory()
-  })
+  val scrollListener: LoadMoreDeterminer = LoadMoreDeterminer(Runnable { loadHistory() })
 
   val historyItemClickListener = Action1<User> { user ->
     view!!.navigateToOptions(userId = user.hashId!!)

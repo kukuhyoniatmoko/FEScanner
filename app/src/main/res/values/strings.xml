@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ITP Scanner</string>
+    <string name="app_name">FoodEnak Scanner</string>
     <string name="action_logout">Logout</string>
 
     <string name="open_drawer">Open Drawer</string>

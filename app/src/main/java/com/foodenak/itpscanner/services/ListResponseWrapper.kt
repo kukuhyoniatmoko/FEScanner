@@ -11,11 +11,7 @@ class ListResponseWrapper<T> : FEResponse {
 
     var results: Result<T>? = null;
 
-    override fun responseStatus(): String? {
-        return status
-    }
+    override fun responseStatus(): String? = status
 
-    override fun responseErrors(): Map<String, List<String>>? {
-        return errors
-    }
+    override fun responseErrors(): Map<String, List<String>>? = errors
 }
