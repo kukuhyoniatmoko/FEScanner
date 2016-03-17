@@ -2,14 +2,13 @@ package com.foodenak.foodenak.rest
 
 import android.content.Context
 import okhttp3.HttpUrl
-import retrofit2.BaseUrl
 
 /**
  * Created by kukuh on 16/02/05.
  */
-class ServiceEndPoints(context: Context) : BaseUrl {
+class ServiceEndPoints(context: Context) {
 
-  override fun url() = HTTP_URL
+  fun url() = HTTP_URL
 
   companion object {
     private val END_POINT = "https://www.foodenak.com/api/"

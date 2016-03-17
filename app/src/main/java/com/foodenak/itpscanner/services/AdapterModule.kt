@@ -9,8 +9,8 @@ import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
+import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
-import retrofit2.BaseUrl
 import retrofit2.CallAdapter
 import retrofit2.Converter
 import retrofit2.Converter.Factory
@@ -24,13 +24,12 @@ import javax.inject.Singleton
 /**
  * Created by ITP on 10/5/2015.
  */
-@Module
-class AdapterModule {
+@Module class AdapterModule {
 
-  @Provides @Singleton internal fun provideBaseUrl(context: Context): BaseUrl = ServiceEndPoints(
-      context)
+  @Provides @Singleton internal fun provideBaseUrl(context: Context): HttpUrl = ServiceEndPoints(
+      context).url()
 
-  @Provides @Singleton internal fun provideRestAdapter(baseUrl: BaseUrl,
+  @Provides @Singleton internal fun provideRestAdapter(baseUrl: HttpUrl,
       @Named(ClientModule.DEFAULT_CLIENT_PROVIDER) client: OkHttpClient,
       converter: Converter.Factory, callAdapter: CallAdapter.Factory): Retrofit {
     return Retrofit.Builder()
@@ -41,7 +40,7 @@ class AdapterModule {
         .build()
   }
 
-  @Provides @Singleton @Named(POOL_ADAPTER) internal fun providePoolRestAdapter(baseUrl: BaseUrl,
+  @Provides @Singleton @Named(POOL_ADAPTER) internal fun providePoolRestAdapter(baseUrl: HttpUrl,
       @Named(ClientModule.POOL_CLIENT_PROVIDER) client: OkHttpClient,
       converter: Factory, callAdapter: CallAdapter.Factory): Retrofit {
     return Retrofit.Builder()
@@ -65,7 +64,6 @@ class AdapterModule {
   }
 
   companion object {
-
     const val POOL_ADAPTER = "POOL_ADAPTER";
   }
 }

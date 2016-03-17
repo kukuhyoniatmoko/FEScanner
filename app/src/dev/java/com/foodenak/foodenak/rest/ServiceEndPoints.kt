@@ -4,15 +4,14 @@ import android.content.Context
 import android.preference.PreferenceManager
 import android.util.Log
 import okhttp3.HttpUrl
-import retrofit2.BaseUrl
 import java.util.ArrayList
 
 /**
  * Created by kukuh on 16/02/05.
  */
-class ServiceEndPoints(private val context: Context) : BaseUrl {
+class ServiceEndPoints(private val context: Context) {
 
-  override fun url(): HttpUrl {
+  fun url(): HttpUrl {
     if (devHttpUrl == null) {
       val url = PreferenceManager.getDefaultSharedPreferences(context).getString(PREF_END_POINT,
           devEndPoints[0])
