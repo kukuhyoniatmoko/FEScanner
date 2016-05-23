@@ -2,6 +2,7 @@ package com.foodenak.foodenak.ui.fragments
 
 import android.app.Activity
 import android.os.Bundle
+import android.os.Process
 import android.support.v4.app.DialogFragment
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -19,10 +20,8 @@ import com.foodenak.itpscanner.services.UserSession
 import com.foodenak.itpscanner.ui.AlertDialogFragment
 import com.malinskiy.materialicons.IconDrawable
 import com.malinskiy.materialicons.Iconify
-import kotlinx.android.synthetic.dev.change_service_end_point.current_end_points
-import kotlinx.android.synthetic.dev.change_service_end_point.server_end_points
-import kotlinx.android.synthetic.dev.change_service_end_point.toolbar
-import java.util.ArrayList
+import kotlinx.android.synthetic.dev.change_service_end_point.*
+import java.util.*
 
 /**
  * Created by ITP on 3/4/2015.
@@ -66,6 +65,7 @@ class ChangeServerDialog : DialogFragment(), AdapterView.OnItemClickListener {
       session.clear()
       UserSession.initialize(UserSession("", ""), context)
       dismiss()
+      android.os.Process.killProcess(Process.myPid())
       true
     })
   }
@@ -124,6 +124,7 @@ class ChangeServerDialog : DialogFragment(), AdapterView.OnItemClickListener {
           if (p1 == null || p1.count == 0) {
             notifyDataSetInvalidated()
           } else {
+            @Suppress("UNCHECKED_CAST")
             addAll(p1.values as MutableList<String>)
             notifyDataSetChanged()
           }

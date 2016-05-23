@@ -4,7 +4,7 @@ import android.content.Context
 import android.preference.PreferenceManager
 import android.util.Log
 import okhttp3.HttpUrl
-import java.util.ArrayList
+import java.util.*
 
 /**
  * Created by kukuh on 16/02/05.
@@ -30,7 +30,7 @@ class ServiceEndPoints(private val context: Context) {
     private var devHttpUrl: HttpUrl? = null
 
     init {
-      devEndPoints.add("http://dev.foodenak.com/")
+      devEndPoints.add("https://dev.foodenak.com/")
       devEndPoints.add("http://192.168.1.163/FoodEnak-Web/")
       devEndPoints.add(END_POINT)
       devEndPoints.add("http://192.168.1.105/foodenak/")

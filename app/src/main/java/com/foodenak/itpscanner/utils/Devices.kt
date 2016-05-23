@@ -20,15 +20,14 @@ object Devices {
     /**
      * Returns the consumer friendly device name
      */
-    private // make sure "HTC" is fully capitalized.
-    val friendlyDeviceName: String
+    private val friendlyDeviceName: String
         get() {
             val manufacturer = Build.MANUFACTURER
             val model = Build.MODEL
             if (model.startsWith(manufacturer, true)) {
                 return model.capitalizeEachWord()
             }
-            if (manufacturer.equals("HTC", true)) {
+            if (manufacturer.equals("HTC", true)) { // make sure "HTC" is fully capitalized.
                 return "HTC $model"
             }
             return "${manufacturer.capitalizeEachWord()} $model"
