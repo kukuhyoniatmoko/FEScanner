@@ -28,4 +28,8 @@ interface LoginView {
     fun showProgressIndicator()
 
     fun hideProgressIndicator()
+
+    fun showConnectionTimeoutMessage()
+
+    fun showNoInternetMessage()
 }

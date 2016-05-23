@@ -24,6 +24,7 @@
     <string name="login_with_google_failed">Login with Google Failed</string>
     <string name="logout_confirmation_message">Are you sure to logout?</string>
 
+    <string name="fb_login_failed">Log in with Facebook failed</string>
     <string name="tw_login_failed">Log in with Twitter failed</string>
     <string name="tw_login_failed_app_not_installed">Twitter App is not installed on your device. Please install it and try again.</string>
 
