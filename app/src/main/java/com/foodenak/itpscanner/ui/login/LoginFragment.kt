@@ -3,7 +3,6 @@ package com.foodenak.itpscanner.ui.login
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.ActivityCompat
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -27,20 +26,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.common.api.GoogleApiClient
 import com.malinskiy.materialicons.IconDrawable
 import com.malinskiy.materialicons.Iconify
-import com.twitter.sdk.android.core.Callback
-import com.twitter.sdk.android.core.Result
-import com.twitter.sdk.android.core.TwitterCore
-import com.twitter.sdk.android.core.TwitterException
-import com.twitter.sdk.android.core.TwitterSession
-import kotlinx.android.synthetic.main.fragment_login.facebook_login_button
-import kotlinx.android.synthetic.main.fragment_login.google_login_button
-import kotlinx.android.synthetic.main.fragment_login.loginView
-import kotlinx.android.synthetic.main.fragment_login.login_button
-import kotlinx.android.synthetic.main.fragment_login.password
-import kotlinx.android.synthetic.main.fragment_login.twitter_login_button
-import kotlinx.android.synthetic.main.fragment_login.username
-import kotlinx.android.synthetic.main.fragment_login_with_progress.progressBar
-import java.util.Arrays
+import com.twitter.sdk.android.core.*
+import kotlinx.android.synthetic.main.fragment_login.*
+import kotlinx.android.synthetic.main.fragment_login_with_progress.*
+import java.util.*
 import javax.inject.Inject
 
 /**
@@ -48,38 +37,26 @@ import javax.inject.Inject
  */
 class LoginFragment : Fragment(), LoginView, FacebookCallback<LoginResult> {
 
-  lateinit var mViewModel: LoginViewModel
-    @Inject set
+  @Inject lateinit var viewModel: LoginViewModel
+  @Inject lateinit var loginManager: LoginManager
+  @Inject lateinit var loginCallback: LoginCallback
+  @Inject lateinit var googleApiClient: GoogleApiClient
 
-  lateinit var mLoginManager: LoginManager
-    @Inject set
+  val callbackManager: CallbackManager = CallbackManager.Factory.create()
+  val twitterLoginCallback = TwitterCallback()
+  val emailTwitterCallback = TwitterEmailCallback()
 
-  val mCallbackManager: CallbackManager = CallbackManager.Factory.create();
-
-  lateinit var mLoginCallback: LoginCallback
-    @Inject set
-
-  lateinit var googleApiClient: GoogleApiClient
-    @Inject set
-
-  val mTwitterLoginCallback = TwitterCallback();
-
-  val mEmailTwitterCallback = TwitterEmailCallback();
-
-  private var pendingLoginWithFacebook: Boolean = false;
-
-  private var pendingLoginWithTwitter: Boolean = false;
-
+  private var pendingLoginWithFacebook: Boolean = false
+  private var pendingLoginWithTwitter: Boolean = false
   private var pendingLoginWithGoogle: Boolean = false
-
-  private var twitterEmail: String? = null;
+  private var twitterEmail: String? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
     val component = activity.obtainActivityComponent<Component>();
     component.inject(this)
-    mLoginManager.registerCallback(mCallbackManager, this);
+    loginManager.registerCallback(callbackManager, this);
   }
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -99,34 +76,34 @@ class LoginFragment : Fragment(), LoginView, FacebookCallback<LoginResult> {
     twitter_login_button.setCompoundDrawablesRelativeWithIntrinsicBounds(
         IconDrawable(context, Iconify.IconValue.zmdi_twitter)
             .actionBarSize().colorRes(R.color.text_white_primary), null, null, null)
-    facebook_login_button.setOnClickListener(mViewModel.facebookLoginClickListener)
-    twitter_login_button.setOnClickListener(mViewModel.twitterLoginClickListener)
-    google_login_button.setOnClickListener(mViewModel.googleLoginClickListener)
-    username.addTextChangedListener(mViewModel.usernameTextWatcher)
-    password.addTextChangedListener(mViewModel.passwordTextWatcher)
+    facebook_login_button.setOnClickListener(viewModel.facebookLoginClickListener)
+    twitter_login_button.setOnClickListener(viewModel.twitterLoginClickListener)
+    google_login_button.setOnClickListener(viewModel.googleLoginClickListener)
+    username.addTextChangedListener(viewModel.usernameTextWatcher)
+    password.addTextChangedListener(viewModel.passwordTextWatcher)
     password.setImeActionLabel(getText(R.string.login), EditorInfo.IME_ACTION_GO)
-    password.setOnEditorActionListener(mViewModel.editorActionListener)
-    login_button.setOnClickListener(mViewModel.loginClickListener)
+    password.setOnEditorActionListener(viewModel.editorActionListener)
+    login_button.setOnClickListener(viewModel.loginClickListener)
     login_button.setOnLongClickListener(ShowChangeServerLongClickListener(childFragmentManager))
   }
 
   override fun onStart() {
     super.onStart()
-    mViewModel.takeView(this)
+    viewModel.takeView(this)
   }
 
   override fun onResume() {
     super.onResume()
     if (pendingLoginWithGoogle && account != null) {
       pendingLoginWithGoogle = false
-      mViewModel.login(account!!.idToken!!)
+      viewModel.login(account!!.idToken!!)
       account = null
     } else if (pendingLoginWithFacebook) {
       pendingLoginWithFacebook = false
-      mViewModel.login(AccessToken.getCurrentAccessToken());
+      viewModel.login(AccessToken.getCurrentAccessToken());
     } else if (pendingLoginWithTwitter) {
       pendingLoginWithTwitter = false
-      mViewModel.login(TwitterCore.getInstance().sessionManager.activeSession, twitterEmail)
+      viewModel.login(TwitterCore.getInstance().sessionManager.activeSession, twitterEmail)
     }
   }
 
@@ -135,7 +112,7 @@ class LoginFragment : Fragment(), LoginView, FacebookCallback<LoginResult> {
   fun loginWithGoogle(account: GoogleSignInAccount) {
     if (isResumed) {
       pendingLoginWithGoogle = false
-      mViewModel.login(account.idToken!!)
+      viewModel.login(account.idToken!!)
     } else {
       pendingLoginWithGoogle = true
       this.account = account;
@@ -144,14 +121,15 @@ class LoginFragment : Fragment(), LoginView, FacebookCallback<LoginResult> {
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     super.onActivityResult(requestCode, resultCode, data);
-    mCallbackManager.onActivityResult(requestCode, resultCode, data);
+    callbackManager.onActivityResult(requestCode, resultCode, data);
   }
 
   override fun requestFacebookCredential() {
-    mLoginManager.logInWithReadPermissions(this, READ_PERMISSIONS);
+    loginManager.logInWithReadPermissions(this, READ_PERMISSIONS);
   }
 
   override fun onError(error: FacebookException?) {
+    Toast.makeText(context, R.string.fb_login_failed, Toast.LENGTH_SHORT).show()
   }
 
   override fun onCancel() {
@@ -162,11 +140,11 @@ class LoginFragment : Fragment(), LoginView, FacebookCallback<LoginResult> {
   }
 
   override fun requestGoogleCredential() {
-    mLoginCallback.loginWithGoogle()
+    loginCallback.loginWithGoogle()
   }
 
   override fun requestTwitterCredential() {
-    mLoginCallback.getTwitterCredential(mTwitterLoginCallback);
+    loginCallback.getTwitterCredential(twitterLoginCallback);
   }
 
   override fun showInvalidUsernameMessage() {
@@ -203,6 +181,23 @@ class LoginFragment : Fragment(), LoginView, FacebookCallback<LoginResult> {
     Auth.GoogleSignInApi.signOut(googleApiClient)
   }
 
+  override fun showConnectionTimeoutMessage() {
+    val manager = childFragmentManager
+    (manager.findFragmentByTag(ERROR_DIALOG_TAG) as DialogFragment?)?.dismiss()
+    AlertDialogFragment.newInstance(getString(R.string.register_redeem_connection_timeout)).show(
+        manager,
+        ERROR_DIALOG_TAG)
+    Auth.GoogleSignInApi.signOut(googleApiClient)
+  }
+
+  override fun showNoInternetMessage() {
+    val manager = childFragmentManager
+    (manager.findFragmentByTag(ERROR_DIALOG_TAG) as DialogFragment?)?.dismiss()
+    AlertDialogFragment.newInstance(getString(R.string.register_redeem_no_internet)).show(manager,
+        ERROR_DIALOG_TAG)
+    Auth.GoogleSignInApi.signOut(googleApiClient)
+  }
+
   override fun showProgressIndicator() {
     loginView.visibility = View.GONE
     progressBar.visibility = View.VISIBLE
@@ -215,38 +210,26 @@ class LoginFragment : Fragment(), LoginView, FacebookCallback<LoginResult> {
 
   override fun loginSuccess(user: User) {
     activity.setResult(Activity.RESULT_OK)
-    ActivityCompat.finishAfterTransition(activity)
+    activity.supportFinishAfterTransition()
   }
 
   override fun onStop() {
     super.onStop()
-    mViewModel.dropView(this)
+    viewModel.dropView(this)
   }
 
   companion object {
-
-    val REQUEST_TOKEN_FAILED = "Failed to get request token"
-
-    val TAG_TWITTER_NOT_INSTALLED = "TAG_TWITTER_NOT_INSTALLED"
-
-    val ERROR_DIALOG_TAG = "ERROR_DIALOG_TAG"
-
+    internal const val ERROR_DIALOG_TAG = "ERROR_DIALOG_TAG"
     private val READ_PERMISSIONS = Arrays.asList("public_profile", "email")
   }
 
   inner class TwitterCallback : Callback<TwitterSession>() {
     override fun success(p0: Result<TwitterSession>) {
-      mLoginCallback.getTwitterEmail(p0.data, mEmailTwitterCallback);
+      loginCallback.getTwitterEmail(p0.data, emailTwitterCallback);
     }
 
     override fun failure(p0: TwitterException?) {
-      if (REQUEST_TOKEN_FAILED == p0?.message) {
-        val manager = childFragmentManager
-        (manager.findFragmentByTag(TAG_TWITTER_NOT_INSTALLED) as DialogFragment?)?.dismiss()
-        TwitterAppNotInstaledDialog().show(manager, TAG_TWITTER_NOT_INSTALLED)
-      } else {
-        Toast.makeText(context, R.string.tw_login_failed, Toast.LENGTH_SHORT).show()
-      }
+      Toast.makeText(context, R.string.tw_login_failed, Toast.LENGTH_SHORT).show()
     }
   }
 

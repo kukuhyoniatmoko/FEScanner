@@ -5,6 +5,7 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import com.facebook.AccessToken
+import com.foodenak.itpscanner.commons.NetworkChecker
 import com.foodenak.itpscanner.entities.FacebookCredential
 import com.foodenak.itpscanner.entities.GoogleCredential
 import com.foodenak.itpscanner.entities.TwitterCredential
@@ -20,6 +21,8 @@ import com.twitter.sdk.android.core.TwitterSession
 import rx.Observer
 import rx.schedulers.Schedulers
 import rx.subscriptions.CompositeSubscription
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -27,140 +30,168 @@ import javax.inject.Singleton
  * Created by ITP on 10/5/2015.
  */
 @Singleton
-class LoginViewModel @Inject constructor(val model: UserModel) {
+class LoginViewModel @Inject constructor(internal val model: UserModel, internal val networkChecker: NetworkChecker) {
 
-    var view: LoginView? = null;
+  var view: LoginView? = null;
 
-    var username: String = "";
+  var username: String = "";
 
-    var password: String = "";
+  var password: String = "";
 
-    var subscription: CompositeSubscription? = null;
+  var subscription: CompositeSubscription? = null;
 
-    val loginObserver: Observer<User> = object : Observer<User> {
-        override fun onError(e: Throwable?) {
-            view?.hideProgressIndicator()
-            if (e is InvalidAdminCredentialException) {
-                view?.showInvalidAdminMessage()
-            } else if (e is ResponseException && e.getStatus() == INVALID_CREDENTIAL) {
-                view?.showInvalidCredentialMessage()
-            } else {
-                view?.showUnknownErrorMessage()
-            }
-        }
-
-        override fun onNext(t: User) {
-            view!!.loginSuccess(t)
-        }
-
-        override fun onCompleted() {
-            view?.hideProgressIndicator()
-        }
+  val loginObserver: Observer<User> = object : Observer<User> {
+    override fun onError(e: Throwable?) {
+      view?.hideProgressIndicator()
+      if (e is InvalidAdminCredentialException) {
+        view?.showInvalidAdminMessage()
+      } else if (e is ResponseException && e.getStatus() == INVALID_CREDENTIAL) {
+        view?.showInvalidCredentialMessage()
+      } else if (e is SocketTimeoutException) {
+        view?.showConnectionTimeoutMessage()
+      } else if (e is UnknownHostException) {
+        view?.showNoInternetMessage()
+      } else {
+        view?.showUnknownErrorMessage()
+      }
     }
 
-    val facebookLoginClickListener = View.OnClickListener { view!!.requestFacebookCredential() }
-
-    val twitterLoginClickListener = View.OnClickListener { view!!.requestTwitterCredential() }
-
-    val googleLoginClickListener = View.OnClickListener { view!!.requestGoogleCredential() }
-
-    val loginClickListener = View.OnClickListener { view ->
-        performLogin()
+    override fun onNext(t: User) {
+      view!!.loginSuccess(t)
     }
 
-    private fun performLogin() {
-        if (username.length < 4 || username.length > 60) {
-            this.view!!.showInvalidUsernameMessage();
-            return
-        }
-        if (password.length < 4 || password.length > 60) {
-            this.view!!.showInvalidPasswordMessage();
-            return
-        }
-        view!!.showProgressIndicator()
-        val user = User()
-        user.username = username;
-        user.password = password;
-        subscription!!.add(LoginInteractor(model).execute(user)
-                .applyScheduler()
-                .subscribe(loginObserver))
+    override fun onCompleted() {
+      view?.hideProgressIndicator()
     }
+  }
 
-    val editorActionListener = TextView.OnEditorActionListener { textView, i, keyEvent ->
-        if (i == EditorInfo.IME_ACTION_GO) {
-            performLogin()
-            return@OnEditorActionListener true
-        }
-        return@OnEditorActionListener false
+  val facebookLoginClickListener = View.OnClickListener {
+    if (networkChecker.isOnline()) {
+      view!!.requestFacebookCredential()
+    } else {
+      view!!.showNoInternetMessage()
     }
+  }
 
-    val usernameTextWatcher: TextWatcher = object : TextWatcherAdapter() {
-        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-            username = s.toString();
-        }
+  val twitterLoginClickListener = View.OnClickListener {
+    if (networkChecker.isOnline()) {
+      view!!.requestTwitterCredential()
+    } else {
+      view!!.showNoInternetMessage()
     }
+  }
 
-    val passwordTextWatcher: TextWatcher = object : TextWatcherAdapter() {
-        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-            password = s.toString();
-        }
+  val googleLoginClickListener = View.OnClickListener {
+    if (networkChecker.isOnline()) {
+      view!!.requestGoogleCredential()
+    } else {
+      view!!.showNoInternetMessage()
     }
+  }
 
-    fun takeView(view: LoginView) {
-        if (this.view == view) {
-            return;
-        }
-        if (subscription != null) {
-            subscription!!.unsubscribe();
-        }
-        subscription = CompositeSubscription();
-        this.view = view;
+  val loginClickListener = View.OnClickListener {
+    if (networkChecker.isOnline()) {
+      performLogin()
+    } else {
+      view!!.showNoInternetMessage()
     }
+  }
 
-    fun dropView(view: LoginView) {
-        if (this.view == view) {
-            this.view = null;
-            if (subscription != null) {
-                subscription!!.unsubscribe();
-                subscription = null;
-            }
-        }
+  private fun performLogin() {
+    if (username.length < 4 || username.length > 60) {
+      this.view!!.showInvalidUsernameMessage();
+      return
     }
+    if (password.length < 4 || password.length > 60) {
+      this.view!!.showInvalidPasswordMessage();
+      return
+    }
+    view!!.showProgressIndicator()
+    val user = User()
+    user.username = username;
+    user.password = password;
+    subscription!!.add(LoginInteractor(model).execute(user)
+        .applyScheduler()
+        .subscribe(loginObserver))
+  }
 
-    fun loginWithFacebook(credential: FacebookCredential) {
-        subscription!!.add(LoginWithFacebookInteractor(model).execute(credential)
-                .applyScheduler()
-                .subscribe(loginObserver))
+  val editorActionListener = TextView.OnEditorActionListener { textView, i, keyEvent ->
+    if (i == EditorInfo.IME_ACTION_GO) {
+      performLogin()
+      return@OnEditorActionListener true
     }
+    return@OnEditorActionListener false
+  }
 
-    fun loginWithGoogle(credential: GoogleCredential) {
-        subscription!!.add(LoginWithGoogleInteractor(model).execute(credential)
-                .applyScheduler()
-                .subscribe(loginObserver))
+  val usernameTextWatcher: TextWatcher = object : TextWatcherAdapter() {
+    override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+      username = s.toString();
     }
+  }
 
-    fun loginWithTwitter(credential: TwitterCredential) {
-        subscription!!.add(LoginWithTwitterInteractor(model).execute(credential)
-                .applyScheduler()
-                .subscribe(loginObserver))
+  val passwordTextWatcher: TextWatcher = object : TextWatcherAdapter() {
+    override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+      password = s.toString();
     }
+  }
 
-    fun login(accessToken: AccessToken) {
-        view!!.showProgressIndicator()
-        subscription!!.add(GetFacebookCredential().execute(accessToken)
-                .subscribeOn(Schedulers.io())
-                .subscribe({ credential -> loginWithFacebook(credential) }, { error -> view!!.showUnknownErrorMessage() }))
+  fun takeView(view: LoginView) {
+    if (this.view == view) {
+      return;
     }
+    if (subscription != null) {
+      subscription!!.unsubscribe();
+    }
+    subscription = CompositeSubscription();
+    this.view = view;
+  }
 
-    fun login(session: TwitterSession, email: String?) {
-        view!!.showProgressIndicator()
-        subscription!!.add(GetTwitterCredential().execute(GetTwitterCredential.Argument(session, email))
-                .subscribeOn(Schedulers.io())
-                .subscribe({ credential -> loginWithTwitter(credential) }, { error -> view!!.showUnknownErrorMessage() }))
+  fun dropView(view: LoginView) {
+    if (this.view == view) {
+      this.view = null;
+      if (subscription != null) {
+        subscription!!.unsubscribe();
+        subscription = null;
+      }
     }
+  }
 
-    fun login(idToken: String) {
-        view!!.showProgressIndicator()
-        loginWithGoogle(GoogleCredential(idToken))
-    }
+  fun loginWithFacebook(credential: FacebookCredential) {
+    subscription!!.add(LoginWithFacebookInteractor(model).execute(credential)
+        .applyScheduler()
+        .subscribe(loginObserver))
+  }
+
+  fun loginWithGoogle(credential: GoogleCredential) {
+    subscription!!.add(LoginWithGoogleInteractor(model).execute(credential)
+        .applyScheduler()
+        .subscribe(loginObserver))
+  }
+
+  fun loginWithTwitter(credential: TwitterCredential) {
+    subscription!!.add(LoginWithTwitterInteractor(model).execute(credential)
+        .applyScheduler()
+        .subscribe(loginObserver))
+  }
+
+  fun login(accessToken: AccessToken) {
+    view!!.showProgressIndicator()
+    subscription!!.add(GetFacebookCredential().execute(accessToken)
+        .subscribeOn(Schedulers.io())
+        .subscribe({ credential -> loginWithFacebook(credential) },
+            { error -> view!!.showUnknownErrorMessage() }))
+  }
+
+  fun login(session: TwitterSession, email: String?) {
+    view!!.showProgressIndicator()
+    subscription!!.add(GetTwitterCredential().execute(GetTwitterCredential.Argument(session, email))
+        .subscribeOn(Schedulers.io())
+        .subscribe({ credential -> loginWithTwitter(credential) },
+            { error -> view!!.showUnknownErrorMessage() }))
+  }
+
+  fun login(idToken: String) {
+    view!!.showProgressIndicator()
+    loginWithGoogle(GoogleCredential(idToken))
+  }
 }

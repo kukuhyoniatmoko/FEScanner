@@ -1,11 +1,7 @@
 package com.foodenak.itpscanner.model
 
 import android.util.Log
-import com.foodenak.itpscanner.entities.Event
-import com.foodenak.itpscanner.entities.HistoryParameter
-import com.foodenak.itpscanner.entities.RedeemParameter
-import com.foodenak.itpscanner.entities.RegisterForEventParameter
-import com.foodenak.itpscanner.entities.User
+import com.foodenak.itpscanner.entities.*
 import com.foodenak.itpscanner.persistence.EventRepository
 import com.foodenak.itpscanner.persistence.UserRepository
 import com.foodenak.itpscanner.persistence.VoucherRepository
@@ -14,9 +10,7 @@ import com.foodenak.itpscanner.services.PoolService
 import com.foodenak.itpscanner.services.exception.validateResponse
 import rx.Observable
 import rx.schedulers.Schedulers
-import java.util.ArrayList
-import java.util.Collections
-import java.util.Date
+import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -144,7 +138,7 @@ class EventModel @Inject constructor(val userRepository: UserRepository,
           it.onError(e)
         }
         Log.d("PoolHistory", "pooling finish ...")
-      }, 0, 5, TimeUnit.SECONDS);
+      }, 5, 5, TimeUnit.MINUTES);
     }
   }
 }

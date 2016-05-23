@@ -16,7 +16,7 @@
     <string name="something_went_wrong">Something went wrong</string>
     <string name="cant_refresh_history">Can\'t refresh history</string>
     <string name="invalid_user_id">Invalid User ID</string>
-    <string name="device_id_redeemed">Device ID Redeemed</string>
+    <string name="device_id_redeemed">Device ID is Invalid or Redeemed</string>
 
     <string name="login_with_facebook">Login with Facebook</string>
     <string name="login_with_twitter">Login with Twitter</string>
@@ -24,6 +24,7 @@
     <string name="login_with_google_failed">Login with Google Failed</string>
     <string name="logout_confirmation_message">Are you sure to logout?</string>
 
+    <string name="fb_login_failed">Log in with Facebook failed</string>
     <string name="tw_login_failed">Log in with Twitter failed</string>
     <string name="tw_login_failed_app_not_installed">Twitter App is not installed on your device. Please install it and try again.</string>
 
@@ -57,16 +58,20 @@
     <string name="camera_permission_denied_message">Camera permission denied, scanning can\'t be started.</string>
     <string name="camera_permission_rationale_message">FE Scanner needs to access camera</string>
 
+    <string name="redeem_failed">Redeem Failed</string>
     <string name="success_message">Successful!</string>
     <string name="uid_invalid_message">UID invalid/redeemed!</string>
     <string name="device_redeemed_message">Device redeemed!</string>
     <string name="voucher_empty_message">Voucher empty!</string>
+    <string name="register_redeem_no_internet">No internet connection …, please check your internet connection and try again</string>
+    <string name="register_redeem_connection_timeout">Connection timeout …, please check your internet connection and try again</string>
 
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="back">Back</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="retry">Retry</string>
 
     <string name="select_event">Select Event</string>
     <string name="select_event_confirmation_message">Are you sure you want to select this event?</string>

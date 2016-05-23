@@ -18,7 +18,7 @@ object DateFormats {
     @SuppressLint("SimpleDateFormat")
     fun format(date: Date): String {
         val result: String
-        var dateFormat: DateFormat =
+        val dateFormat: DateFormat =
                 synchronized (sFormatPools) {
                     if (sFormatPools.isEmpty()) {
                         SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
@@ -42,7 +42,7 @@ object DateFormats {
     @Throws(ParseException::class)
     fun parse(date: String): Date {
         val result: Date
-        var dateFormat: DateFormat =
+        val dateFormat: DateFormat =
                 synchronized (sFormatPools) {
                     if (sFormatPools.isEmpty()) {
                         SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
@@ -66,7 +66,7 @@ object DateFormats {
     @SuppressLint("SimpleDateFormat")
     fun formatShort(date: Date): String {
         val result: String
-        var dateFormat: DateFormat =
+        val dateFormat: DateFormat =
                 synchronized (sShortFormatPools) {
                     if (sShortFormatPools.isEmpty()) {
                         SimpleDateFormat("yyyy-MM-dd")
@@ -90,7 +90,7 @@ object DateFormats {
     @Throws(ParseException::class)
     fun parseShort(date: String): Date {
         val result: Date
-        var dateFormat: DateFormat =
+        val dateFormat: DateFormat =
                 synchronized (sShortFormatPools) {
                     if (sShortFormatPools.isEmpty()) {
                         SimpleDateFormat("yyyy-MM-dd")
