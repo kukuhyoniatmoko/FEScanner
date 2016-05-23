@@ -32,5 +32,13 @@ interface RedeemView {
 
     fun bindInitialVoucher(initialVoucher: Boolean, initialLuckyDip: Boolean)
 
-    fun notifyDeviceIdRedeemed()
+    fun notifyDeviceIdInvalidOrRedeemed()
+
+    fun showConnectionTimeoutMessage()
+
+    fun showRedeemFailedConnectionTimeoutMessage()
+
+    fun showRedeemFailedNoInternetMessage()
+
+    fun showNoInternetMessage()
 }

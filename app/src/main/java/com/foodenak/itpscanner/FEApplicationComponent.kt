@@ -1,6 +1,7 @@
 package com.foodenak.itpscanner
 
 import com.facebook.login.LoginManager
+import com.foodenak.itpscanner.commons.android.CommonsModule
 import com.foodenak.itpscanner.model.EventModel
 import com.foodenak.itpscanner.model.UserModel
 import com.foodenak.itpscanner.persistence.DbModule
@@ -22,11 +23,8 @@ import javax.inject.Singleton
  * Created by ITP on 10/5/2015.
  */
 @Singleton
-@Component(modules = arrayOf(FEApplicationModule::class,
-    AdapterModule::class,
-    ClientModule::class,
-    ServiceModule::class,
-    DbModule::class,
+@Component(modules = arrayOf(FEApplicationModule::class, AdapterModule::class, ClientModule::class,
+    ServiceModule::class, DbModule::class, CommonsModule::class,
     ImageLoaderModule::class)) interface FEApplicationComponent {
 
   fun scanViewModel(): ScanViewModel
