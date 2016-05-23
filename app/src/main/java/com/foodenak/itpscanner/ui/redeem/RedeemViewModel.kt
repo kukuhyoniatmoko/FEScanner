@@ -68,7 +68,10 @@ class RedeemViewModel(val userId: String, val eventId: Long, val deviceId: Strin
       view!!.showNoChangeHasBeenMadeMessage()
     } else if ((initialLuckyDip == true && luckyDip == false) || (initialVoucher == true && voucher == false)) {
       view!!.showUserNeverReceiveVoucherConfirmation()
-    } else performRedeemInternal()
+    } else {
+      redeemObservable = null
+      performRedeemInternal()
+    }
   }
 
   private fun performRedeemInternal() {
