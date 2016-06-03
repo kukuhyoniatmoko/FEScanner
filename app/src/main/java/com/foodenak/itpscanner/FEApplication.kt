@@ -18,7 +18,7 @@ class FEApplication : Application() {
   override fun onCreate() {
     super.onCreate()
     FacebookSdk.sdkInitialize(this);
-    var twitterConfig = TwitterAuthConfig(BuildConfig.TWITTER_KEY, BuildConfig.TWITTER_SECRET);
+    val twitterConfig = TwitterAuthConfig(BuildConfig.TWITTER_KEY, BuildConfig.TWITTER_SECRET);
     Fabric.with(Fabric.Builder(this)
         .kits(TwitterCore(twitterConfig))
         .debuggable(BuildConfig.DEBUG)
