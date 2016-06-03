@@ -265,12 +265,14 @@ class ScanFragment : Fragment(), FragmentCompat.OnRequestPermissionsResultCallba
         snackText.append(getString(R.string.voucher_redeemed))
       } else if (pivot.redeemLuckydipAt != null && pivot.redeemVoucherAt != null) {
         snackText.append(getString(R.string.lucky_dip_voucher_redeemed))
+      } else if (pivot.redeemLuckydipAt == null && pivot.redeemVoucherAt == null) {
+        snackText.append(getString(R.string.no_redeem))
       }
+    } else {
+      snackText.append(getString(R.string.no_redeem))
     }
     val snack = Snackbar.make(scrollView, snackText.toString(), Snackbar.LENGTH_LONG)
-        .setAction(R.string.edit, {
-          viewModel.editRedeemOptionsListener.call(user)
-        })
+        .setAction(R.string.edit, { viewModel.editRedeemOptionsListener.call(user) })
     snack.duration = TimeUnit.SECONDS.toMillis(10).toInt()
     snack.show()
   }

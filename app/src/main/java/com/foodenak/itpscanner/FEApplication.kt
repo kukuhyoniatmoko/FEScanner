@@ -15,26 +15,25 @@ class FEApplication : Application() {
 
   private lateinit var component: FEApplicationComponent
 
-    val dependencyHolder = DependencyHolder()
-
-    override fun onCreate() {
-        super.onCreate()
-        FacebookSdk.sdkInitialize(this);
-        var twitterConfig = TwitterAuthConfig(BuildConfig.TWITTER_KEY, BuildConfig.TWITTER_SECRET);
-        Fabric.with(Fabric.Builder(this)
-                .kits(TwitterCore(twitterConfig))
-                .debuggable(BuildConfig.DEBUG)
-                .build());
-        UserSession.initialize(this)
-        component = createComponent(FEApplicationModule(this));
-        if (UserSession.currentSession.isActive()) component().userModel().getUser(UserSession.currentSession.id)
-                .subscribeOn(Schedulers.io())
-                .subscribe({ user -> UserSession.currentSession.user = user }, {})
-    }
+  override fun onCreate() {
+    super.onCreate()
+    FacebookSdk.sdkInitialize(this);
+    val twitterConfig = TwitterAuthConfig(BuildConfig.TWITTER_KEY, BuildConfig.TWITTER_SECRET);
+    Fabric.with(Fabric.Builder(this)
+        .kits(TwitterCore(twitterConfig))
+        .debuggable(BuildConfig.DEBUG)
+        .build());
+    UserSession.initialize(this)
+    component = createComponent(FEApplicationModule(this));
+    if (UserSession.currentSession.isActive()) component().userModel().getUser(
+        UserSession.currentSession.id)
+        .subscribeOn(Schedulers.io())
+        .subscribe({ user -> UserSession.currentSession.user = user }, {})
+  }
 
   fun component() = component
 
   fun createComponent(module: FEApplicationModule): FEApplicationComponent {
     return DaggerFEApplicationComponent.builder().fEApplicationModule(module).build()
-    }
+  }
 }
