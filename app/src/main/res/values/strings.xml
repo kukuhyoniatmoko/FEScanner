@@ -46,6 +46,7 @@
     <string name="lucky_dip_redeemed">Lucky dip redeemed</string>
     <string name="voucher_redeemed">Voucher redeemed</string>
     <string name="lucky_dip_voucher_redeemed">Lucky dip &amp; voucher redeemed</string>
+    <string name="no_redeem">No redeem</string>
     <string name="start_scan">Start Scan</string>
     <string name="re_scan">Re-Scan</string>
     <string name="enable_scan">Enable Scan</string>
